@@ -1,8 +1,8 @@
 import {inject, Getter} from '@loopback/core';
 import {DefaultCrudRepository, repository, BelongsToAccessor} from '@loopback/repository';
 import {MongoDataSource} from '../datasources';
-import {Cliente, ClienteRelations, Empleado, Empresa} from '../models';
-import {ClienteRepository} from './cliente.repository';
+import {Cliente, ClienteRelations, Empleado} from '../models';
+import {EmpleadoRepository} from './empleado.repository';
 
 export class ClienteRepository extends DefaultCrudRepository<
   Cliente,
