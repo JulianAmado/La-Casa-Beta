@@ -48,7 +48,6 @@ export class MensajesEmpleadosController {
     })
     mensajesEmpleados: MensajesEmpleados,
   ): Promise<MensajesEmpleados> {
-    this.notificacion.notificacionesPorSMS();
     return this.mensajesEmpleadosRepository.create(mensajesEmpleados);
   }
 
