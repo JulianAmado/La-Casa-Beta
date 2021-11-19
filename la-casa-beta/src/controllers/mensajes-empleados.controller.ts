@@ -1,3 +1,4 @@
+import { service } from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -19,11 +20,14 @@ import {
 } from '@loopback/rest';
 import {MensajesEmpleados} from '../models';
 import {MensajesEmpleadosRepository} from '../repositories';
+import { NotificacionesService } from '../services';
 
 export class MensajesEmpleadosController {
   constructor(
     @repository(MensajesEmpleadosRepository)
     public mensajesEmpleadosRepository : MensajesEmpleadosRepository,
+    @service(NotificacionesService)
+    public notificacion: NotificacionesService,
   ) {}
 
   @post('/mensajes-empleados')
@@ -44,6 +48,7 @@ export class MensajesEmpleadosController {
     })
     mensajesEmpleados: MensajesEmpleados,
   ): Promise<MensajesEmpleados> {
+    this.notificacion.notificacionesPorSMS();
     return this.mensajesEmpleadosRepository.create(mensajesEmpleados);
   }
 

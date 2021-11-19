@@ -3,7 +3,7 @@ import {DefaultCrudRepository, repository, BelongsToAccessor, HasManyRepositoryF
 import {MongoDataSource} from '../datasources';
 import {Empleado, EmpleadoRelations, Empresa, MensajesEmpleados} from '../models';
 import {EmpresaRepository} from './empresa.repository';
-import {MensajesEmpleadosRepository} from './mensajes-empleados.repository';
+import {MensajesEmpleadosRepository} from './mensajesEmpleados.repository';
 
 export class EmpleadoRepository extends DefaultCrudRepository<
   Empleado,
