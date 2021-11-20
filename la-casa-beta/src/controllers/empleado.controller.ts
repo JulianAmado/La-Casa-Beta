@@ -20,14 +20,16 @@ import {
 } from '@loopback/rest';
 import {Empleado} from '../models';
 import {EmpleadoRepository} from '../repositories';
-import { NotificacionesService } from '../services';
-
+import { AutenticacionService, NotificacionesService } from '../services';
+const fetch = require('node.fetch')
 export class EmpleadoController {
   constructor(
     @repository(EmpleadoRepository)
     public empleadoRepository : EmpleadoRepository,
     @service(NotificacionesService)
     public Notificaciones: NotificacionesService,
+    @service(AutenticacionService)
+    public servicioAutenticacion: AutenticacionService
   ) {}
 
   @post('/empleados')
@@ -50,7 +52,22 @@ export class EmpleadoController {
     empleado: Omit<Empleado, 'id'>,
   ): Promise<Empleado> {
     this.Notificaciones.notificacionesPorSMS();
-    return this.empleadoRepository.create(empleado);
+    
+    let clave = this.servicioAutenticacion.GenerarClave();
+    let claveCifrada = this.servicioAutenticacion.CifrarClave(clave);
+    empleado.clave = claveCifrada
+    let p = await this.empleadoRepository.create(empleado);
+
+    //Noitificar al usuario 
+    let destino = empleado.email;
+    let asunto = 'Registro en la plataforma';
+    let contenido = `Hola ${empleado.nombres}, su nombre de usuario es: ${empleado.email} y su contraseña es: ${clave}`;
+    fetch //(envio-correo?correo_destino=${destino}&asunto=${asunto}&contenido=${contenido})
+    .then((data:any) => {
+      console.log(data);
+
+    })
+    return p;
   }
 
   @get('/empleados/count')
