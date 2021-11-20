@@ -1,13 +1,8 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, belongsTo} from '@loopback/repository';
+import { Empleado } from '.';
 
 @model()
 export class MensajesEmpleados extends Entity {
-  @property({
-    type: 'string',
-    required: true,
-  })
-  email: string;
-
   @property({
     type: 'string',
     id: true,
@@ -19,12 +14,22 @@ export class MensajesEmpleados extends Entity {
     type: 'string',
     required: true,
   })
-  mensaje: string;
+  email: string;
 
   @property({
     type: 'string',
+    required: true,
   })
-  empleadoId?: string;
+  telefono: string;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
+  mensaje: string;
+
+  @belongsTo(() => Empleado)
+  empleadoId: string;
 
   constructor(data?: Partial<MensajesEmpleados>) {
     super(data);
