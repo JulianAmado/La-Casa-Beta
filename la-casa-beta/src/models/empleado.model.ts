@@ -42,12 +42,6 @@ export class Empleado extends Entity {
   email: string;
 
   @property({
-    type: `string`,
-    required: false,
-  })
-  clave: string;
-  
-  @property({
     type: 'string',
     required: true,
   })
