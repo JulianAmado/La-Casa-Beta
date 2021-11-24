@@ -21,6 +21,8 @@ import {
 import {Empleado} from '../models';
 import {EmpleadoRepository} from '../repositories';
 import { NotificacionesService } from '../services';
+import { AutenticacionService } from '../services';
+require('dotenv').config();
 
 export class EmpleadoController {
   constructor(
@@ -28,6 +30,8 @@ export class EmpleadoController {
     public empleadoRepository : EmpleadoRepository,
     @service(NotificacionesService)
     public Notificaciones: NotificacionesService,
+    @service(AutenticacionService)
+    public servicioAutenticacion: AutenticacionService
   ) {}
 
   @post('/empleados')
@@ -49,8 +53,16 @@ export class EmpleadoController {
     })
     empleado: Omit<Empleado, 'id'>,
   ): Promise<Empleado> {
-    this.Notificaciones.notificacionesPorSMS();
-    return this.empleadoRepository.create(empleado);
+
+    let clave = this.servicioAutenticacion.GenerarClave();
+    let claveCifrada = this.servicioAutenticacion.CifrarClave(clave);
+    empleado.clave = claveCifrada;
+    let p = await this.empleadoRepository.create(empleado);
+
+    //Notificar al Usuario
+    this.servicioAutenticacion.Usuarioyclave(p,clave);
+    this.Notificaciones.notificacionesPorSMS(p,clave);
+    return p;
   }
 
   @get('/empleados/count')
